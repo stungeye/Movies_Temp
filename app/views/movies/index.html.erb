@@ -2,6 +2,6 @@
 
 <ul>
   <% @movies.each do |movie| %>
-    <li><%= movie.title %></li>
+    <li><%= link_to movie.title, movie %> was produced by <%= movie.production_company.name %></li>
   <% end %>
 </ul>
