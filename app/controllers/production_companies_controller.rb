@@ -1,6 +1,16 @@
 class ProductionCompaniesController < ApplicationController
   def index
-    @production_companies = ProductionCompany.all
+    @production_companies = ProductionCompany.left_joins(:movies)
+                                             .group("production_companies.id")
+                                             .select("production_companies.*")
+                                             .select("count(movies.id) as movie_count")
+                                             .order("movie_count DESC")
+
+    # Left Join the Movies
+    # Group by production company ids
+    # Select production_companies.*
+    # Select count(movies.id) as movie_count
+    # Order by movie_count DESC
   end
   # In the associated index view:
   # - List all the companies in an unordered list with each being a link to the show page.

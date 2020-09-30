@@ -2,6 +2,9 @@
 
 <ol class="ml-5">
   <% @production_companies.each do |company| %>
-    <li><%= link_to company.name, company %></li>
+    <li>
+      <%= link_to company.name, company %> 
+      <em>(<%= pluralize(company.movie_count, 'Top Movie') %>)</em>
+    </li>
   <% end %>
 </ol>
