@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'home/index'
   # GET /movies      =>  movies#index
   # GET /movies/:id  =>  movies#show
   resources :movies, only: %i[index show]
