@@ -10,4 +10,8 @@ class Movie < ApplicationRecord
   validates :title, uniqueness: true
   validates :year, :duration, numericality: { only_integer: true }
   validates :average_vote, numericality: true
+
+  def genres_comma_delimited
+    genres.map { |genre| genre.name }.join(", ")
+  end
 end

@@ -1,6 +1,8 @@
 require "csv" # Import the CSV library that comes with Ruby
 
 # Remove all data to start.
+MovieGenre.delete_all
+Genre.delete_all
 Movie.delete_all
 ProductionCompany.delete_all
 
@@ -15,7 +17,7 @@ movies.each do |movie|
   production_company = ProductionCompany.find_or_create_by(name: movie["production_company"])
 
   if production_company.valid?
-    movie = production_company.movies.create(
+    m = production_company.movies.create(
       title:        movie["original_title"],
       year:         movie["year"],
       duration:     movie["duration"],
@@ -23,12 +25,30 @@ movies.each do |movie|
       average_vote: movie["avg_vote"]
     )
 
-    puts "Could not create movie: #{movie['original_title']}" unless movie.valid?
+    unless m.valid?
+      puts "Could not create movie: #{movie['original_title']}"
+      next
+    end
+
+    genres = movie["genre"].split(", ")
+    genres.each do |genre|
+      g = Genre.find_or_create_by(name: genre)
+
+      unless g.valid?
+        puts "Invalid Genre: #{genre} for movie: #{m.title}"
+        next
+      end
+
+      MovieGenre.create(movie: m, genre: g)
+    end
+
   else
-    puts "Could not create production company: #{movie['production_company']}"
+    puts "Coud not create production company: #{movie['production_company']}"
     puts production_company.errors.messages
   end
 end
 
 puts "Created #{ProductionCompany.count} Production Companies"
 puts "Created #{Movie.count} Movies"
+puts "Created #{Genre.count} Genres"
+puts "Created #{MovieGenre.count} Movie Genres"
